@@ -39,7 +39,7 @@ public class SampleScript : MonoBehaviour {
 		string sheetLink = "";
 
 		// parse each sheet
-		for( int i = 0; i < 1; i++) {
+		for( int i = 0; i < maxSheets; i++) {
 
 			sheetLink = spQuery.sheetLinks[i];
 			Debug.Log(sheetLink);
@@ -50,13 +50,28 @@ public class SampleScript : MonoBehaviour {
 			reader = new JsonReader(query.text, readerSettings);
 			WorksheetQuery wkQuery = (WorksheetQuery) reader.Deserialize<WorksheetQuery>();
 
+			spQuery.AddWorksheetQuery(wkQuery);
 			Debug.Log("Parse Success: " + wkQuery.title);
 		}
-
 
 		if(spQuery != null)
 			Debug.Log("Read Success!");
 		else
 			Debug.Log("Read Failed!");
+
+		InitializeGameLevelsFromOnlineData(spQuery);
+	}
+
+	private void InitializeGameLevelsFromOnlineData(SpreadsheetQuery spQuery) {
+
+		int maxLevels = spQuery.GetWorksheetCount();
+
+		// we start parsing at worksheet index 1;
+		for(int i = 1; i < maxLevels; i++) {
+
+			WorksheetQuery wkQuery = spQuery.GetWorkseetQueryAtIndex(i);
+			GameLevelData.GetInstance().ParseLevelFromOnlineData(wkQuery);
+		}
+		 
 	}
 }
