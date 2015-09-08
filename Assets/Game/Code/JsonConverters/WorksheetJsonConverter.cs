@@ -20,7 +20,7 @@ public class WorksheetJsonConverter : JsonConverter {
 	public override object ReadJson (Type type, Dictionary<string, object> value) {
 		
 		Dictionary<string, object> genObject; // generic object used to read json info
-		Dictionary<string, object>[] genObjArray; 
+		//Dictionary<string, object>[] genObjArray; 
 		WorksheetQuery wkQuery = new WorksheetQuery();
 		
 		try {
@@ -40,13 +40,13 @@ public class WorksheetJsonConverter : JsonConverter {
 				// we need to extract "R1C1"
 				genObject = entryArray[i] as Dictionary<string, object>;
 				genObject = genObject["id"] as Dictionary<string, object>;
-				string substrRowCol = ParseCellIndex(genObject["$t"] as string);
+				int[] cellIndex = ParseCellIndex(genObject["$t"] as string);
 
 				genObject = entryArray[i] as Dictionary<string, object>;
 				genObject = genObject["content"] as Dictionary<string, object>;
 				string cellContents = genObject["$t"] as string;
 
-				wkQuery.AddCellContent(substrRowCol, cellContents);
+				wkQuery.AddCellContent(cellIndex[0], cellIndex[1], cellContents);
 			}
 		}
 		catch(Exception ex) {
@@ -58,11 +58,25 @@ public class WorksheetJsonConverter : JsonConverter {
 		return wkQuery;
 	}
 	
-	private string ParseCellIndex(string cellID) {
+	private int[] ParseCellIndex(string cellID) {
 		
 		int lastIdxSlash = cellID.LastIndexOf('/') + 1;
 		string substringRowCol = cellID.Substring(lastIdxSlash, cellID.Length - lastIdxSlash);
 
-		return substringRowCol;
+		string row = substringRowCol.Substring(1, substringRowCol.IndexOf('C') - 1);
+		string col = substringRowCol.Substring(substringRowCol.IndexOf('C') + 1);
+
+		int[] cellIndex = new int[2];
+		int parseResult = 0;
+
+		if(Int32.TryParse(row, out parseResult)) {
+			cellIndex[0] = parseResult;
+		}
+
+		if(Int32.TryParse(col, out parseResult)) {
+			cellIndex[1] = parseResult;
+		}
+
+		return cellIndex;
 	}
 }
