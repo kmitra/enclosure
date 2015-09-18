@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameLevelData {
 
-	private static GameLevelData instance;
+	private static GameLevelData instance = null;
 
 	public static GameLevelData GetInstance() {
 
@@ -31,5 +31,14 @@ public class GameLevelData {
 		levelList.Add(tmpGameLevel);
 
 		Debug.Log("Max Levels: " + levelList.Count);
+	}
+
+	public GameLevel GetGameLevel(int levelIdx) {
+
+		if(levelIdx >= levelList.Count)
+			return null;
+
+		GameLevel gameLevel = levelList[levelIdx];
+		return gameLevel;
 	}
 }

@@ -60,6 +60,7 @@ public class SampleScript : MonoBehaviour {
 			Debug.Log("Read Failed!");
 
 		InitializeGameLevelsFromOnlineData(spQuery);
+		ChangeScene();
 	}
 
 	private void InitializeGameLevelsFromOnlineData(SpreadsheetQuery spQuery) {
@@ -73,5 +74,10 @@ public class SampleScript : MonoBehaviour {
 			GameLevelData.GetInstance().ParseLevelFromOnlineData(wkQuery);
 		}
 		 
+	}
+
+	private void ChangeScene() {
+
+		Application.LoadLevel("Ingame");
 	}
 }

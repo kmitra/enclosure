@@ -30,8 +30,11 @@ public class GameLevel {
 	// tile types
 	// color streams
 
-	private List<LevelTile> listTile;
-	private List<ColorStream> listColorStream;
+	public List<LevelTile> listTile;
+	public List<ColorStream> listColorStream;
+
+	public int maxRow = 0;
+	public int maxCol = 0;
 
 	public GameLevel() {
 
@@ -53,6 +56,12 @@ public class GameLevel {
 				LevelTile levelTile = new LevelTile();
 				levelTile.ParseOnlineTileData(cell);
 				listTile.Add(levelTile);
+
+				if(levelTile.gridX > maxCol)
+					maxCol = levelTile.gridX;
+				
+				if(levelTile.gridY > maxRow)
+					maxRow = levelTile.gridY;
 			}
 			else if(cell.content.IndexOf("S_") == 0) {
 
@@ -62,5 +71,11 @@ public class GameLevel {
 				listColorStream.Add(colorStream);
 			}
 		}
+
+		if(maxRow > 0) 
+			maxRow = maxRow + 1;
+
+		if(maxCol > 0)
+			maxCol = maxCol + 1;
 	}
 }
